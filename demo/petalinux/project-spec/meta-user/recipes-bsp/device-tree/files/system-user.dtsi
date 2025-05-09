@@ -1,0 +1,45 @@
+/include/ "system-conf.dtsi"
+/ {
+    chosen {
+        bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootwait cma=512M";
+    };
+};
+
+&amba_pl {
+    fixed_timer_0 {
+        compatible = "generic-uio";
+        interrupt-parent = <&gic>;
+        interrupts = <0 90 1>;
+        interrupt-names = "zynq_pl_fixed_interval_timer_0";
+    };
+
+    vio_0 {
+        compatible = "generic-uio";
+        interrupt-parent = <&gic>;
+        interrupts = <0 91 1>;
+        interrupt-names = "zynq_pl_vio_0";
+    };
+
+};
+
+&axi_gpio_0 {
+    compatible = "generic-uio";
+    interrupts = <0 89 1>;
+};
+
+&sdhci1 {
+    no-1-8-v; // 1.8V to 3.3V level shifter (i.e. using LVCMOS18, but sd connector is driven by 3.3V)
+    disable-wp;
+    disable-cd;
+};
+
+&gem3 {
+    phy-handle = <&phyc>;
+    phyc: phy@c {
+        reg = <0xc>;
+        ti,rx-internal-delay = <0x8>;
+        ti,tx-internal-delay = <0xa>;
+        ti,fifo-depth = <0x1>;
+        ti,dp83867-rxctrl-strap-quirk;
+    };
+};
