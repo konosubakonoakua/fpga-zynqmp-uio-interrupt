@@ -7,9 +7,9 @@
 #include <linux/slab.h>
 #include <linux/of_device.h>
 
-#define DEVICE_NAME "zynqmp_irq" // Driver name
+#define DEVICE_NAME "zynq_irq" // Driver name
 #define MAX_IRQS 2               // Support 2 interrupt channels
-#define LOG(fmt, ...) printk(KERN_INFO "[ZYNQMP_IRQ] " fmt "\n", ##__VA_ARGS__)
+#define LOG(fmt, ...) printk(KERN_INFO "[ZYNQ_IRQ] " fmt "\n", ##__VA_ARGS__)
 
 /* Per-interrupt private data structure */
 struct irq_priv {
@@ -145,7 +145,7 @@ static int irq_probe(struct platform_device *pdev) {
     atomic_set(&irqs[i].is_open, 0);
 
     // Set IRQ name
-    snprintf(irqs[i].name, sizeof(irqs[i].name), "pl_irq%d", i);
+    snprintf(irqs[i].name, sizeof(irqs[i].name), "zynq_irq_%d", i);
 
     // Register interrupt handler
     ret = devm_request_threaded_irq(
@@ -157,7 +157,7 @@ static int irq_probe(struct platform_device *pdev) {
     }
 
     // Create device node
-    device_create(cls, NULL, MKDEV(major, i), NULL, "zynqmp_irq%d", i);
+    device_create(cls, NULL, MKDEV(major, i), NULL, "zynq_irq_%d", i);
     LOG("Initialized IRQ %d (%s)", irqs[i].irq_num, irqs[i].name);
   }
 
@@ -189,7 +189,7 @@ static int irq_remove(struct platform_device *pdev) {
 
 /* Device tree match table */
 static const struct of_device_id irq_of_match[] = {
-    {.compatible = "fei,zynqmp-irq"}, // Must match device tree
+    {.compatible = "fei,zynq-irq"}, // Must match device tree
     {}};
 MODULE_DEVICE_TABLE(of, irq_of_match);
 
@@ -199,7 +199,7 @@ static struct platform_driver irq_driver = {
     .remove = irq_remove,
     .driver =
         {
-            .name = "zynqmp_irq",
+            .name = "zynq_irq",
             .of_match_table = irq_of_match,
         },
 };
@@ -207,4 +207,4 @@ module_platform_driver(irq_driver);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("fei");
-MODULE_DESCRIPTION("ZynqMP PL Interrupt Driver with Async Notification");
+MODULE_DESCRIPTION("Zynq PL Interrupt Driver with Async Notification");

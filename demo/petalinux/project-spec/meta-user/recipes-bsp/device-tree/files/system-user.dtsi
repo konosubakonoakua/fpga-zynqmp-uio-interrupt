@@ -21,9 +21,9 @@
     };
 
     fixed_timer_1 {
-        compatible = "generic-uio";
+        compatible = "fei,zynq-irq";
         interrupt-parent = <&gic>;
-        interrupts = <0 104 1>;
+        interrupts = <0 104 1>, <0 106 1>;
         interrupt-names = "zynq_pl_fixed_interval_timer_1";
     };
 
