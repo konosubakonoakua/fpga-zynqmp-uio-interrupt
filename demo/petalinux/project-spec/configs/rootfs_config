@@ -4175,6 +4175,11 @@ CONFIG_lsuio=y
 # CONFIG_peekpoke is not set
 
 #
+# modules 
+#
+CONFIG_zynq-irq=y
+
+#
 # user packages 
 #
 
